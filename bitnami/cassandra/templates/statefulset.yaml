@@ -195,8 +195,14 @@ spec:
             {{- if (include "cassandra.tlsEncryption" . ) }}
             - name: CASSANDRA_INTERNODE_ENCRYPTION
               value: {{ (include "cassandra.internode.tlsEncryption" .) | quote }}
+            {{- if (include "cassandra.createTlsSecret" .) }}
+            - name: CASSANDRA_SSL_CREATE_KEYSTORES
+              value: "true"
+            {{- end }}
+            {{- if (include "cassandra.client.tlsEncryption" .) }}
             - name: CASSANDRA_CLIENT_ENCRYPTION
-              value: {{ (include "cassandra.client.tlsEncryption" .) | quote }}
+              value: "true"
+            {{- end }}
             - name: CASSANDRA_TRUSTSTORE_PASSWORD
               value: {{ .Values.tls.password | quote }}
             - name: CASSANDRA_KEYSTORE_PASSWORD
