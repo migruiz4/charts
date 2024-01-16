@@ -97,7 +97,7 @@ jobs:
       contents: read
       pull-requests: write
     outputs:
-      changes-pushed: ${{ steps.update-pr.outputs.changes-pushed }}
+      result: ${{ steps.update-pr.outputs.result }}
     if: needs.get-chart.outputs.result == 'ok'
     steps:
       - name: Checkout bitnami/charts
@@ -199,7 +199,9 @@ jobs:
           # Push all the new commits, if any
           if [[ $(git cherry -v) ]]; then
             git push
-            echo "changes-pushed=yes" >> $GITHUB_OUTPUT
+            echo "result=ok" >> $GITHUB_OUTPUT
+          else
+            echo "result=skip" >> $GITHUB_OUTPUT
           fi
   vib-verify:
     runs-on: ubuntu-latest
@@ -213,7 +215,7 @@ jobs:
     #    ---> the PR already contains the 'verify' label )
     if: |
       needs.get-chart.outputs.result == 'ok' &&
-      needs.update-pr.outputs.changes-pushed != 'yes' &&
+      needs.update-pr.outputs.result == 'skip' &&
       (
         contains(github.event.pull_request.labels.*.name, 'verify') || (github.event.action == 'labeled' && github.event.label.name == 'verify')
       )
