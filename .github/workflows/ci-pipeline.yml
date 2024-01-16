@@ -204,12 +204,6 @@ jobs:
           else
             echo "result=skip" >> $GITHUB_OUTPUT
           fi
-  test:
-    runs-on: ubuntu-latest
-    needs: [get-chart, update-pr]
-    steps:
-      - run: |
-          echo '${{ needs.update-pr.outputs.result }}'
   vib-verify:
     runs-on: ubuntu-latest
     needs: [get-chart, update-pr]
