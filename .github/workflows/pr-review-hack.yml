@@ -13,6 +13,7 @@ on:
 permissions: {}
 jobs:
   pr-info:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -46,6 +47,7 @@ jobs:
           echo "labels=${labels}" >> $GITHUB_OUTPUT
           echo "resource_url=${resource_url}" >> $GITHUB_OUTPUT
   call-pr-review-comment:
+    if: github.event.repository.name == 'bitnami/charts'
     uses: bitnami/support/.github/workflows/pr-review-comment.yml@main
     needs: pr-info
     permissions:

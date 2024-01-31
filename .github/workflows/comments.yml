@@ -15,5 +15,6 @@ concurrency:
   group: card-movement-${{ github.event.issue.number }}
 jobs:
   call-comments-workflow:
+    if: github.event.repository.name == 'bitnami/charts'
     uses: bitnami/support/.github/workflows/comment-created.yml@main
     secrets: inherit

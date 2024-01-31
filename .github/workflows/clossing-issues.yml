@@ -10,6 +10,7 @@ on:
 permissions: {}
 jobs:
   stale:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e

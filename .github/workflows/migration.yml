@@ -6,6 +6,7 @@ on: [ workflow_dispatch ]
 permissions: {}
 jobs:
   call-migration-workflow:
+    if: github.event.repository.name == 'bitnami/charts'
     uses: bitnami/support/.github/workflows/migrate-reusable.yml@main
     with:
       organization: bitnami

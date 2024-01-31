@@ -13,6 +13,7 @@ on: # rebuild any PRs and main branch changes
 permissions: {}
 jobs:
   get-chart:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     name: 'Get modified charts'
     permissions:
@@ -60,6 +61,7 @@ jobs:
           script: |
               core.setFailed('${{ steps.get-chart.outputs.error }}')
   vib-publish:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     needs: get-chart
     if: ${{ needs.get-chart.outputs.result == 'ok' }}
@@ -85,6 +87,7 @@ jobs:
           VIB_ENV_S3_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           VIB_ENV_S3_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   update-index:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     needs:
       - vib-publish
@@ -106,7 +109,7 @@ jobs:
           curl -SsLfO "https://get.helm.sh/${HELM_TARBALL}" && sudo tar xf "$HELM_TARBALL" --strip-components 1 -C /usr/local/bin
       - id: update-index
         name: Fetch chart and update index
-        env: 
+        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
@@ -145,6 +148,7 @@ jobs:
           fi
   # If the CD Pipeline does not succeed we should notify the interested agents
   slack-notif:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     needs:
       - vib-publish

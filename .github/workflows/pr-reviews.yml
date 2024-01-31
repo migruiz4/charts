@@ -12,6 +12,7 @@ concurrency:
   group: card-movement-${{ github.event.pull_request.number }}
 jobs:
   just-notice:
+    if: github.event.repository.name == 'bitnami/charts'
     # This is a dummy workflow that triggers a workflow_run
     runs-on: ubuntu-latest
     steps:

@@ -11,6 +11,7 @@ permissions: {}
 # This job won't trigger any additional event. All actions are performed with GITHUB_TOKEN
 jobs:
   stale:
+    if: github.event.repository.name == 'bitnami/charts'
     runs-on: ubuntu-latest
     permissions:
       issues: write
