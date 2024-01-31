@@ -154,7 +154,7 @@ jobs:
       - id: update-crds
         name: 'Update CRDs'
         # To avoid malicious executions, only PRs performed by the bitnami-bot will perform the CRDs update
-        if: github.event.pull_request.user.login == 'bitnami-bot'
+        if: github.event.pull_request.user.login == 'migruiz4'
         env:
           CHART: ${{ needs.get-chart.outputs.chart }}
         run: |
