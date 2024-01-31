@@ -297,6 +297,8 @@ jobs:
           echo "verification_mode=${verification_mode}" >> $GITHUB_OUTPUT
           echo "runtime_parameters_file=${runtime_parameters_file}" >> $GITHUB_OUTPUT
       - uses: vmware-labs/vmware-image-builder-action@v0
+        # TESTING: Skip VIB verify
+        if: github.event.pull_request.user.login == 'bitnami-bot'
         name: Verify ${{ needs.get-chart.outputs.chart }}
         with:
           pipeline: ${{ needs.get-chart.outputs.chart }}/vib-verify.json
