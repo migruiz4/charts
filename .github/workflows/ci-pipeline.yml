@@ -129,7 +129,7 @@ jobs:
           run: |
             if [ -d "/charts/bitnami/${CHART}" ]; then
               kubescape scan framework MITRE,NSA,SOC2,cis-v1.23-t1.0.1 /charts/bitnami/${CHART} --format json -o /out/report.json
-              printf %.0f $(jq .summaryDetails.complianceScore /out/report.json) > /out/score
+              printf %.2f $(jq .summaryDetails.complianceScore /out/report.json) > /out/score
             else
               echo "Chart not found at /charts/bitnami/${CHART}. It will be assumed that the upstream chart does not exist."
               echo "0.00" > /out/score
