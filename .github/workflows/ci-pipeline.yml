@@ -93,13 +93,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [get-chart]
     name: Get chart latest Kubescape score
+    permissions:
+      contents: read
     outputs:
       threshold: ${{ steps.set-output.outputs.threshold }}
-    if: |
-      needs.get-chart.outputs.result == 'ok' &&
-      (
-        contains(github.event.pull_request.labels.*.name, 'verify') || (github.event.action == 'labeled' && github.event.label.name == 'verify')
-      )
+    if: needs.get-chart.outputs.result == 'ok'
     steps:
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
         name: Checkout 'main' branch
@@ -111,13 +109,6 @@ jobs:
         run: |
           HELM_TARBALL="helm-v3.8.1-linux-amd64.tar.gz"
           curl -SsLfO "https://get.helm.sh/${HELM_TARBALL}" && sudo tar xf "$HELM_TARBALL" --strip-components 1 -C /usr/local/bin
-      - name: Run helm-dep-build
-        env:
-          CHART: ${{ needs.get-chart.outputs.chart }}
-        run: |
-          if [ -d "charts-main/bitnami/${CHART}" ]; then
-            helm dep build charts-main/bitnami/${CHART}
-          fi
       - name: Run helm-dep-build
         env:
           CHART: ${{ needs.get-chart.outputs.chart }}
@@ -144,7 +135,7 @@ jobs:
             if [ -d "/charts/bitnami/${CHART}" ]; then
               kubescape scan framework MITRE,NSA,SOC2,cis-v1.23-t1.0.1 /charts/bitnami/${CHART} --format json -o /out/report.json
               # Truncate score to 2 decimals
-              printf "%s.%.2s" $(echo "$(jq .summaryDetails.complianceScore /out/report.json)" | tr '.' ' ') | sed 's/\.$//' > /tmp/score
+              printf "%s.%.2s" $(echo "$(jq .summaryDetails.complianceScore /out/report.json)" | tr '.' ' ') | sed 's/\.$//' > /out/score
             else
               echo "Chart not found at /charts/bitnami/${CHART}. It will be assumed that the upstream chart does not exist."
             fi
