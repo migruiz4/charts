@@ -151,7 +151,7 @@ jobs:
       - id: set-output
         name: Set threshold score
         run: |
-          if [[ -d "/tmp/score" ]]; then
+          if [[ -f "/tmp/score" ]]; then
             score="$(cat /tmp/score)"
           else
             echo "Skipping Kubescape score check."
