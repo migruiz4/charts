@@ -128,11 +128,10 @@ jobs:
       - id: get-chart-score
         uses: addnab/docker-run-action@4f65fabd2431ebc8d299f8e5a018d79a769ae185
         name: Get main branch kubescape score
+        # Skip step when user is bitnami-bot or 'skip-score' label is used
         if: |
           !(
-            # Skip when user is bitnami-bot
             github.event.pull_request.user.login == 'bitnami-bot' ||
-            # Skip when label 'skip-score' is used
             contains(github.event.pull_request.labels.*.name, 'skip-score') ||
             (github.event.action == 'labeled' && github.event.label.name == 'skip-score')
           )
