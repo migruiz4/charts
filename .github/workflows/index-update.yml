@@ -35,7 +35,7 @@ jobs:
           yq eval '.entries[][] | .name + ":" + .version' merged_index.yaml | sort| uniq > merged_index_releases
           new_releases="$(comm -13 charts_index_releases merged_index_releases | tr "\n" " " | sed 's/ $//')"
           if [ -n "${new_releases}" ]; then
-              echo "Found new releases:\n${new_releases// /\n}"
+              echo "Found new releases: ${new_releases}"
           else
               echo "No new releases detected"
           fi
@@ -57,8 +57,6 @@ jobs:
         with:
           ref: 'index'
           path: index
-          # The token is persisted in the local git config and enables scripts to run authenticated git commands.
-          token: ${{ secrets.BITNAMI_BOT_TOKEN }}
       - id: update-index-and-promotions
         name: Pull charts and update index
         env:
@@ -148,8 +146,10 @@ jobs:
               --arg bundled_os_version "12" \
               --argjson image_list "${image_list}" "${promotion_json_template}" | jq '.properties += {"alias_platform_from": "bitnami-chart-debian-x64"}' > "${file_prefix}-vmware-chart-debian-x64.json"
             # Upload files to the release bucket
-            aws s3 cp "${file_prefix}-bitnami-chart-debian-x64.json" "s3://${AWS_PROMOTION_BUCKET}/releases/${release_date}/${file_prefix}-bitnami-chart-debian-x64.json"
-            aws s3 cp "${file_prefix}-vmware-chart-debian-x64.json" "s3://${AWS_PROMOTION_BUCKET}/releases/${release_date}/${file_prefix}-vmware-chart-debian-x64.json"
+            #aws s3 cp "${file_prefix}-bitnami-chart-debian-x64.json" "s3://${AWS_PROMOTION_BUCKET}/releases/${release_date}/${file_prefix}-bitnami-chart-debian-x64.json"
+            #aws s3 cp "${file_prefix}-vmware-chart-debian-x64.json" "s3://${AWS_PROMOTION_BUCKET}/releases/${release_date}/${file_prefix}-vmware-chart-debian-x64.json"
+            cat "${file_prefix}-bitnami-chart-debian-x64.json"
+            cat "${file_prefix}-vmware-chart-debian-x64.json"
 
             # Remove chart files
             rm -rf ../download
