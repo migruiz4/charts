@@ -111,9 +111,7 @@ jobs:
         run: |
           hardcoded_images=()
           grep -REoh "image:\s+[\"']*.+[\"']*\s*$" "charts/bitnami/${CHART}/templates" | sed "s/image: [\"']*//" | sed "s/[\"']*$//" | while read -r image ; do
-            if [[ "$image" != {{*}} ]]; then
-              hardcoded_images+=("${image}")
-            fi
+            hardcoded_images+=("${image}")
           done
 
           echo "${hardcoded_images[@]}"
