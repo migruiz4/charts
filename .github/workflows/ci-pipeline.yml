@@ -110,7 +110,7 @@ jobs:
           CHART: ${{ needs.get-chart.outputs.chart }}
         run: |
           hardcoded_images=()
-          while read -r images; do
+          while read -r image; do
             hardcoded_images+=("${image}")
           done <<< "$(grep -REoh "image:\s+[\"']*.+[\"']*\s*$" "charts/bitnami/${CHART}/templates" | sed "s/image: [\"']*//" | sed "s/[\"']*$//")"
 
