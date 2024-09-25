@@ -70,6 +70,22 @@ spec:
       securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.web.podSecurityContext "context" $) | nindent 8 }}
       {{- end }}
       initContainers:
+        - name: demo-tagged
+          image: bad/image:test.v.1.0
+        - name: demo-tagged-2
+          image: bad/image:test.v.1.0-2
+        - name: demo-server
+          image: 1.2.3.4:8080/bad/image:test.v.1.0
+        - name: demo-domain
+          image: registry.com/bad/image:test.v.1.0
+        - name: demo-latest
+          image: bad/image
+        - name: demo-base
+          image: test
+        - name: demo-partial
+          image: bad/image:test
+        - name: demo-sha
+          image: ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
         - name: create-default-config
           image: {{ include "airflow.image" . }}
           imagePullPolicy: {{ .Values.web.image.pullPolicy | quote }}
