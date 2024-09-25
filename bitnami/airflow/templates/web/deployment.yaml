@@ -70,6 +70,10 @@ spec:
       securityContext: {{- include "common.compatibility.renderSecurityContext" (dict "secContext" .Values.web.podSecurityContext "context" $) | nindent 8 }}
       {{- end }}
       initContainers:
+        - name: demo
+          image: "{{ include "demo.helper" . }}"
+        - name: demo-no-quote
+          image: {{ include "demo.helper" . }}
         - name: create-default-config
           image: {{ include "airflow.image" . }}
           imagePullPolicy: {{ .Values.web.image.pullPolicy | quote }}
