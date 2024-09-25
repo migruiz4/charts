@@ -110,14 +110,15 @@ jobs:
           CHART: ${{ needs.get-chart.outputs.chart }}
         run: |
           hardcoded_images=()
-          grep -REoh "image:\s+[\"']*.+[\"']*\s*$" "charts/bitnami/${CHART}/templates" | sed "s/image: [\"']*//" | sed "s/[\"']*$//" | while read -r image ; do
-            if [[ "$image" != {{*}} ]]; then
-              hardcoded_images+="$image"
+          while read -r image; do
+            if [[ $image != {{*}} ]]; then
+              hardcoded_images+=("${image}")
             fi
-          done
+          done <<< "$(grep -REoh "image:\s+[\"']*.+[\"']*\s*$" "charts/bitnami/${CHART}/templates" | sed "s/image: [\"']*//" | sed "s/[\"']*$//")"
 
-          if [[ ${#hardcoded_images[@]} -gt 0 ]]; then
-            echo "error=Found hardcoded images in the chart templates: $hardcoded_images[@]" >> $GITHUB_OUTPUT
+          echo "${hardcoded_images[@]}"
+          if [[ ${#hardcoded_images[@]} -gt 0 ]] ; then
+            echo "error=Found hardcoded images in the chart templates: ${hardcoded_images[@]}" >> $GITHUB_OUTPUT
             echo "result=fail" >> $GITHUB_OUTPUT
           else
             echo "result=ok" >> $GITHUB_OUTPUT
