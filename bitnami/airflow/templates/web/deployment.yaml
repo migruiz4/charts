@@ -86,6 +86,12 @@ spec:
           image: bad/image:test
         - name: demo-sha
           image: ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
+        - name: demo-partial
+          image: test/{{ "helper" . }}:test
+        - name: demo-partial-2
+          image: {{ include "helper" . }}/{{ include "helper-2" .}}
+        - name: demo-partial-3
+          image: {{ include "helper" . }}/{{ include "helper-2" .}}:test
         - name: create-default-config
           image: {{ include "airflow.image" . }}
           imagePullPolicy: {{ .Values.web.image.pullPolicy | quote }}
