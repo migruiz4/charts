@@ -73,7 +73,7 @@ jobs:
     name: Send notification
     needs: [deploy]
     if: ${{ always() && needs.deploy.outputs.result != 'ok' }}
-    uses: bitnami/charts/.github/workflows/gchat-notification.yml@main
+    uses: migruiz4/charts/.github/workflows/gchat-notification.yml@main
     with:
       workflow: ${{ github.workflow }}
       job-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
