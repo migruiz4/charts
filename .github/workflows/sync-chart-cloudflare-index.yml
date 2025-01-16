@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - index
+  workflow_call:
 
 # Remove all permissions by default
 permissions: {}
