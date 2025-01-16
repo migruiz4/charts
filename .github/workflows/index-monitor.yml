@@ -105,7 +105,7 @@ jobs:
     name: Re-upload index.yaml
     needs: [validation-check, integrity-check]
     if: ${{ always() && (needs.validation-check.outputs.result != 'ok' || needs.integrity-check.outputs.result != 'ok') }}
-    uses: bitnami/charts/.github/workflows/sync-chart-cloudflare-index.yml@index
+    uses: migruiz4/charts/.github/workflows/sync-chart-cloudflare-index.yml@index
     secrets: inherit
   notify:
     name: Send notification
