@@ -20,31 +20,28 @@ jobs:
     - uses: actions/checkout@master
     - name: Upload to Cloudflare using a BCOM upload proxy
       id: upload
-      env:
-        CLOUDFLARE_CLIENT_ID: ${{ secrets.CLOUDFLARE_CLIENT_ID }}
-        CLOUDFLARE_CLIENT_SECRET: ${{ secrets.CLOUDFLARE_CLIENT_SECRET }}
-        CLOUDFLARE_USER_AUTH: ${{ secrets.CLOUDFLARE_USER_AUTH }}
       run: |
         status="fail"
         retries=0
         while [[ "${status}" != "ok" && "$retries" -lt 3 ]]; do
-          export TOKEN=$(curl -s --location 'https://api-esp.broadcom.com/auth/oauth/v2/token' \
-          --data-urlencode "client_id=${CLOUDFLARE_CLIENT_ID}" \
-          --data-urlencode "client_secret=${CLOUDFLARE_CLIENT_SECRET}" \
-          --data-urlencode 'grant_type=client_credentials' | jq .access_token -r )
+          #export TOKEN=$(curl -s --location 'https://api-esp.broadcom.com/auth/oauth/v2/token' \
+          #--data-urlencode "client_id=${CLOUDFLARE_CLIENT_ID}" \
+          #--data-urlencode "client_secret=${CLOUDFLARE_CLIENT_SECRET}" \
+          #--data-urlencode 'grant_type=client_credentials' | jq .access_token -r )
 
           curl_args=(
-            "--location" "--request" "PUT"
+            "--location" "--request" "GET"
+          #  "--location" "--request" "PUT"
             "--fail" "--max-time" "10"
-            "--header" "userAuth: Basic ${CLOUDFLARE_USER_AUTH}"
-            "--header" "filePath: /index.yaml"
-            "--header" "Content-Type: text/yaml"
-            "--header" "Authorization: Bearer $TOKEN"
-            "--upload-file" "bitnami/index.yaml"
+          #  "--header" "userAuth: Basic ${CLOUDFLARE_USER_AUTH}"
+          #  "--header" "filePath: /index.yaml"
+          #  "--header" "Content-Type: text/yaml"
+          #  "--header" "Authorization: Bearer $TOKEN"
+          #  "--upload-file" "bitnami/index.yaml"
           )
           echo "Uploading index.yaml to Cloudflare"
           # To avoid the action from failing, we run the request inside a conditional so we can retry
-          if curl "${curl_args[@]}" 'https://api-esp.broadcom.com/crushftp/fileUpload'; then
+          if curl "${curl_args[@]}" 'https://bitnami.com'; then
             echo "Index upload request succeeded, waiting 20 seconds before integrity check..."
             # Wait for 20 seconds to ensure the new index.yaml is available
             sleep 20
